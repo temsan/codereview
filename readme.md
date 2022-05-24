@@ -21,3 +21,6 @@ reader = new BufferedReader(new FileReader(path.toFile()));
 `Optional<Character> chr = null;`
 3. Используется вложенный try с пустым блоком catch. Нужно использовать try with resources
 `try (r = new BufferedReader(new FileReader(path.toFile()))){}` и соответственно блок finally можно выбросить
+4. В условии `if ((s.charAt(i) > '0') || (s.charAt(i) < '9'))` должно быть нестрогое равенство
+---
+### Обработку в цикле можно переписать на Stream API

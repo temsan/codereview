@@ -12,6 +12,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Преобразовать файл так, чтобы выходной файл содержал только цифровые символы из исходного
@@ -19,28 +20,18 @@ import java.util.Optional;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        StringBuffer result = new StringBuffer();
         var path = Path.of("test.txt");
-        try (BufferedReader r = new BufferedReader(new FileReader(path.toFile()))) {
-            String line;
-            while ((line = r.readLine()) != null) {
-                readLine(result, line);
-            }
+        String stringResult;
+        try (Stream<String> lineStream = Files.newBufferedReader(path).lines()) {
+            stringResult = lineStream.map(String::chars)
+                    .flatMapToInt(s -> s.filter(chr -> chr >= (int) '0' && chr <= (int) '9'))
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
         } catch (IOException e) {
             throw new WrongFileFormatException();
         }
 
-        Files.writeString(Path.of("result.txt"), result.toString());
-    }
-
-    private static void readLine(StringBuffer accum, String s) {
-        Optional<Character> chr = Optional.empty();
-        for (int i = 0; i < s.length(); i++) {
-            if ((s.charAt(i) > '0') || (s.charAt(i) < '9')) {
-                chr = Optional.of(s.charAt(i));
-            }
-        }
-        chr.ifPresent(accum::append);
+        Files.writeString(Path.of("result.txt"), stringResult);
     }
 
     public static class WrongFileFormatException extends RuntimeException {
