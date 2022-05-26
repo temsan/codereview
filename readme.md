@@ -6,9 +6,7 @@
 r = new BufferedReader(new FileReader(path.toFile()));
 reader = new BufferedReader(new FileReader(path.toFile()));
 ```
-Также это касается
-`String l;`
----
+Также это касается`String l;`
 ### Deprecated
 1. Конструктор `new Character('0')` устарел
 ---
